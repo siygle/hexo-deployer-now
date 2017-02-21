@@ -30,7 +30,12 @@ hexo.extend.deployer.register('now', function (args) {
     log.info('now.json: ', config)
     jsonfile.writeFileSync(`${publicDir}/now.json`, config)
 
-    return spawn('now', ['--static', publicDir], {verbose: true})
+    spawn('now', ['--static', publicDir], {verbose: true})
+
+    if (args.alias) {
+      spawn('now', ['alias'], { cwd: publicDir, verbose: true })
+    }
+    return
   })
   .catch(function () {
     const HELP = [
