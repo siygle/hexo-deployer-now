@@ -16,4 +16,4 @@ deploy:
 ```
 
 ## Todo
-This deployer used now-cli for now, but hope to switch API when it support static deployment.
+This deployer used [now-cli](https://github.com/zeit/now-cli) for now, but hope to switch [API](https://zeit.co/api) when it support static deployment.
