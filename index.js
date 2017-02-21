@@ -25,7 +25,7 @@ hexo.extend.deployer.register('now', function (args) {
     let config = {
       name: args.name
     }
-    if (args.alias) config['aliases'] = [args.alias]
+    if (args.alias) config['alias'] = args.alias
 
     log.info('now.json: ', config)
     jsonfile.writeFileSync(`${publicDir}/now.json`, config)
