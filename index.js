@@ -21,28 +21,33 @@ hexo.extend.deployer.register('now', function (args) {
   }
 
   commandExists('now')
-  .then(function () {
-    let config = {
-      name: args.name
-    }
-    if (args.alias) config['alias'] = args.alias
+    .then(function () {
+      let config = {
+        name: args.name
+      }
+      if (args.alias) config['alias'] = args.alias
 
-    log.info('now.json: ', config)
-    jsonfile.writeFileSync(`${publicDir}/now.json`, config)
+      log.info('now.json: ', config)
+      jsonfile.writeFileSync(`${publicDir}/now.json`, config)
 
-    spawn('now', ['--static', publicDir], {verbose: true})
+      spawn('now', ['--static', publicDir], { verbose: true })
+        .then((resp) => {
+          if (args.alias) {
+            spawn('now', ['alias'], { cwd: publicDir, verbose: true })
+          }
+          return
+        })
+        .catch((err) => {
+          log.error(err)
+          return
+        })
+    })
+    .catch(function () {
+      const HELP = [
+        'Need install & setup now-cli first',
+        'https://zeit.co/now#get-started'
+      ]
 
-    if (args.alias) {
-      spawn('now', ['alias'], { cwd: publicDir, verbose: true })
-    }
-    return
-  })
-  .catch(function () {
-    const HELP = [
-      'Need install & setup now-cli first',
-      'https://zeit.co/now#get-started'
-    ]
-
-    return console.log(HELP.join('\n'))
-  })
+      return console.log(HELP.join('\n'))
+    })
 })
