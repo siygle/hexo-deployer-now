@@ -1,6 +1,6 @@
 {
   "name": "hexo-deployer-now",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Zeit now deployer plugin of Hexo",
   "main": "index.js",
   "scripts": {},
