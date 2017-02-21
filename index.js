@@ -2,13 +2,15 @@
 
 'use strict'
 
-const fs = require('hexo-fs')
-const path = require('path')
 const commandExists = require('command-exists')
 const spawn = require('hexo-util/lib/spawn')
+const jsonfile = require('jsonfile')
 
 hexo.extend.deployer.register('now', function (args) {
-  if (args.name || args.alias) {
+  let log = this.log
+  let publicDir = this.public_dir
+
+  if (!args.name) {
     const HELP = [
       'You need to setup now API token and assign your app name first',
       'If you are not familiar with Zeit now, please go look their howto first:',
@@ -20,14 +22,16 @@ hexo.extend.deployer.register('now', function (args) {
 
   commandExists('now')
   .then(function () {
-    let params = [
-      '--static',
-      `--name ${args.name}`,
-      `--alias ${args.alias}`,
-      hexo.public_dir
-    ]
+    let config = {
+      name: args.name,
+      type: 'npm'
+    }
+    if (args.alias) config['alias'] = args.alias
 
-    return spawn('now', params, {verbose: true})
+    log.info('now.json: ', config)
+    jsonfile.writeFileSync(`${publicDir}/now.json`, config)
+
+    return spawn('now', publicDir, {verbose: true})
   })
   .catch(function () {
     const HELP = [
