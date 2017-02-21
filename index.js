@@ -23,15 +23,14 @@ hexo.extend.deployer.register('now', function (args) {
   commandExists('now')
   .then(function () {
     let config = {
-      name: args.name,
-      type: 'npm'
+      name: args.name
     }
     if (args.alias) config['alias'] = args.alias
 
     log.info('now.json: ', config)
     jsonfile.writeFileSync(`${publicDir}/now.json`, config)
 
-    return spawn('now', publicDir, {verbose: true})
+    return spawn('now', ['--static', publicDir], {verbose: true})
   })
   .catch(function () {
     const HELP = [
